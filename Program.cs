@@ -60,11 +60,38 @@ namespace PROJECT_Multiple_Choice_Exam
 
             //logic
             Console.WriteLine(" ********* MCQ STUDENT EXAM REPORT ********* ");
-            //hah no
-
-            //output
+            // Count the correct answers for student
+            int[] score = CountCorrectAnswer(answers, studAns);
+            //output #1 Print student id and their score
+            ShowStudScore(studId, score);
+            //output #2 Print total candidate number
+            ShowTotalCandidates(studId);
+            //output #3 Print the correct answer for each question
+            ShowCorrectAnswerForQuestion();
  
             Console.ReadKey();
+        }
+        static public void ShowCorrectAnswerForQuestion()
+        {
+            //code here
+        }
+
+        static public void ShowTotalCandidates(string [] students)
+        {
+            //code here
+        }
+        static public void ShowStudScore(string[] studID, int[] score)
+        {
+            //code here
+        }
+
+        static public int[] CountCorrectAnswer(string ansSheet, string[] studAns)
+        {
+            int[] score = new int[studAns.Length];
+
+            //code here
+
+            return score;
         }
         //Working with files methods
         private static void ReadFileData()
@@ -119,9 +146,11 @@ namespace PROJECT_Multiple_Choice_Exam
 
                 Console.WriteLine("\n>>>Answer line: " + answerLine + " ");
 
-                for (int i = 1; i < size - 1; i++)
+                for (int i = 1; i < size -1; i++)
                 {
-                    Console.WriteLine(i + ") Student id: " + studentID[i] + "\n   Student answers: " + studentAnswers[i]);
+                    Console.WriteLine(i + ") \n" +
+                        "Student id: "   + studentID[i] + 
+                        "\nAnswers:    " + studentAnswers[i]);
                 }
             }
         }
