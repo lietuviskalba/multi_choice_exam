@@ -60,12 +60,12 @@ namespace PROJECT_Multiple_Choice_Exam
 
             //logic
             Console.WriteLine(" ********* MCQ STUDENT EXAM REPORT ********* ");
-            // Count the correct answers for student
+            // Count the correct answers for students
             int[] score = CountCorrectAnswer(answers, studAns);
             //output #1 Print student id and their score
             ShowStudScore(studId, score);
             //output #2 Print total candidate number
-            ShowTotalCandidates(studId);
+            Console.WriteLine("The total amount of eximninations marked : " + ShowTotalCandidates(studId));
             //output #3 Print the correct answer for each question
             ShowCorrectAnswerForQuestion();
  
@@ -76,20 +76,52 @@ namespace PROJECT_Multiple_Choice_Exam
             //code here
         }
 
-        static public void ShowTotalCandidates(string [] students)
+        static public int ShowTotalCandidates(string [] students)
         {
-            //code here
+            int count = 1;
+
+            for(int i=1; i<students.Length-1; i++)
+            {
+                //Console.WriteLine(" -- >" + count);
+                count++;
+            }
+
+            return count;
         }
         static public void ShowStudScore(string[] studID, int[] score)
         {
-            //code here
+            Console.WriteLine("{0,-20} {1,5}", "Student number", "Mark");
+            for(int i=1; i<studID.Length-1; i++)
+            {
+                Console.WriteLine("{0,-22} {1:D}", studID[i], score[i]);
+            }
         }
 
         static public int[] CountCorrectAnswer(string ansSheet, string[] studAns)
         {
             int[] score = new int[studAns.Length];
+            char[] word;
+            char[] ansLetter = ansSheet.ToCharArray();
 
-            //code here
+            for (int i = 1; i < studAns.Length - 1; i++)
+            {
+                word = studAns[i].ToCharArray();
+                for (int j = 0; j < 20; j++)
+                {
+                    if (word[j] == ansLetter[j])
+                    {
+                        score[i] += 4;
+                    }
+                    else if (word[j] == 'X' || word[j] == 'x')
+                    {
+                        // no score
+                    }
+                    else
+                    {
+                        score[i] -= 1;
+                    }
+                }
+            }
 
             return score;
         }
