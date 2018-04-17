@@ -9,9 +9,71 @@ namespace PROJECT_Multiple_Choice_Exam
 {
     class Program
     {
-        static string path = "D:/Developed Course Programs/C#/PROJECT_Multiple_Choice_Exam/PROJECT_Multiple_Choice_Exam/exam.txt";
-        static bool showRedFile = false; //Change to true to see red file
+        class RetrieveData
+        {
+            //Read the whole data file
+            static public void ReadFileData()
+            {
+                try
+                {   // Read each line of the file into a string array.
+                    string mantas_path = "D:/Developed Course Programs/C#/PROJECT_Multiple_Choice_Exam/PROJECT_Multiple_Choice_Exam/exam.txt";
+                    string path = mantas_path; //Add you path here to read from .txt file
+                    string[] lines = File.ReadAllLines(@path);
 
+                    SplitData(lines);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Exception while reading file:  " + e.Message);
+                }
+                Console.WriteLine("File read finsihed... \n");
+            }
+            //Split up all data into specific variables
+            static private void SplitData(string[] lines)
+            {
+                int size = lines.Length;
+                string[] splitData = { };
+                string answerLine;
+                string[] studentID = new string[size];
+                string[] studentAnswers = new string[size];
+
+                answerLine = lines[0];
+
+                for (int i = 1; i < size - 1; i++)
+                {
+                    splitData = lines[i].Split();
+                    studentID[i] = splitData[0];
+                    studentAnswers[i] = splitData[1];
+                }
+
+                ExamData ed = new ExamData();
+                ed.SetAnswerLine(answerLine);
+                ed.SetStudentId(studentID);
+                ed.SetStudentAnswers(studentAnswers);
+            }
+            static public void DisplayData(bool showThis)
+            {
+                ExamData ed = new ExamData();
+
+                string[] studentID = ed.GetStudntId();
+                string[] studentAnswers = ed.GetStudntAnswers();
+                string answerLine = ed.GetAnswerLine();
+                int size = studentID.Length;
+
+                if (showThis == true)
+                {
+
+                    Console.WriteLine("\n>>>Answer line: " + answerLine + " ");
+
+                    for (int i = 1; i < size - 1; i++)
+                    {
+                        Console.WriteLine(i + ") \n" +
+                            "Student id: " + studentID[i] +
+                            "\nAnswers:    " + studentAnswers[i]);
+                    }
+                }
+            }
+        }
         class ExamData{
             //Get and set specific data
 
@@ -47,10 +109,9 @@ namespace PROJECT_Multiple_Choice_Exam
 
         static void Main(string[] args)
         {
-            Console.WriteLine("System started... \n");
-
             //input
-            ReadFileData();
+            RetrieveData.ReadFileData();
+            RetrieveData.DisplayData(false); // change to true to see red data from .txt
 
             ExamData ed = new ExamData();
 
@@ -60,7 +121,6 @@ namespace PROJECT_Multiple_Choice_Exam
 
             //logic
             Console.WriteLine(" ********* MCQ STUDENT EXAM REPORT ********* ");
-            // Count the correct answers for students
             int[] score = CountCorrectAnswer(answers, studAns);
             //output #1 Print student id and their score
             ShowStudScore(studId, score);
@@ -96,7 +156,6 @@ namespace PROJECT_Multiple_Choice_Exam
                 Console.WriteLine("{0,-22} {1:D}", studID[i], score[i]);
             }
         }
-
         static public int[] CountCorrectAnswer(string ansSheet, string[] studAns)
         {
             int[] score = new int[studAns.Length];
@@ -125,66 +184,6 @@ namespace PROJECT_Multiple_Choice_Exam
 
             return score;
         }
-        //Working with files methods
-        private static void ReadFileData()
-        {
-            try
-            {   // Read each line of the file into a string array.
-                string[] lines = System.IO.File.ReadAllLines(@path);
-
-                SplitData(lines);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception while reading file:  " + e.Message);
-            }
-            Console.WriteLine("File read finsihed... \n");
-        }
-        static public void SplitData(string[] lines)
-        {
-            int size = lines.Length;
-            string[] splitData = { };
-            string answerLine;
-            string[] studentID = new string[size];
-            string[] studentAnswers = new string[size];   
-
-            answerLine = lines[0];
-
-            for (int i=1; i<size-1; i++)
-            {
-                splitData = lines[i].Split();                   
-                studentID[i] = splitData[0];
-                studentAnswers[i] = splitData[1];
-            }
-
-            ExamData ed = new ExamData();
-            ed.SetAnswerLine(answerLine);
-            ed.SetStudentId(studentID);
-            ed.SetStudentAnswers(studentAnswers);
-
-            DisplayData(showRedFile, lines, studentID, studentAnswers, answerLine, size);
-        }
-        static public void DisplayData(bool showThis, string[] lines, string[] studentID, string[] studentAnswers, string answerLine, int size )
-        {
-            if (showThis == true)
-            {
-                // Display the file contents by using a foreach loop.
-                Console.WriteLine("Contents of exam.txt");
-                foreach (string line in lines)
-                {
-                    // Use a tab to indent each line of the file.
-                    Console.WriteLine(line);
-                }
-
-                Console.WriteLine("\n>>>Answer line: " + answerLine + " ");
-
-                for (int i = 1; i < size -1; i++)
-                {
-                    Console.WriteLine(i + ") \n" +
-                        "Student id: "   + studentID[i] + 
-                        "\nAnswers:    " + studentAnswers[i]);
-                }
-            }
-        }
+        
     }
 }
