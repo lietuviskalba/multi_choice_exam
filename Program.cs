@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace PROJECT_Multiple_Choice_Exam
 {
+    //Mantas Lingaitis 101165443
+    //
     class Program
     {
         class RetrieveData
@@ -80,6 +82,7 @@ namespace PROJECT_Multiple_Choice_Exam
             static private string ansLine;
             static private string[] studIds;
             static private string[] studAns;
+            static private int[] correctCountAns;
 
             public void SetAnswerLine(string ans)
             {
@@ -104,6 +107,16 @@ namespace PROJECT_Multiple_Choice_Exam
             public string[] GetStudntAnswers()
             {
                 return studAns;
+            }
+
+            public static void SetCorrectCount(int[] count)
+            {
+                correctCountAns = count;
+            }
+
+            public static int[] GetCorrectCount()
+            {
+                return correctCountAns;
             }
         }
 
@@ -131,10 +144,6 @@ namespace PROJECT_Multiple_Choice_Exam
  
             Console.ReadKey();
         }
-        static public void ShowCorrectAnswerForQuestion()
-        {
-            //code here
-        }
 
         static public int ShowTotalCandidates(string [] students)
         {
@@ -161,15 +170,22 @@ namespace PROJECT_Multiple_Choice_Exam
             int[] score = new int[studAns.Length];
             char[] word;
             char[] ansLetter = ansSheet.ToCharArray();
+            int[] correctCountQuestion = new int[20]; // 20 for amount of questions
+            int count = 0; // the correct question counter
 
             for (int i = 1; i < studAns.Length - 1; i++)
             {
                 word = studAns[i].ToCharArray();
                 for (int j = 0; j < 20; j++)
                 {
+                    // if the score is correct add 4 points
                     if (word[j] == ansLetter[j])
                     {
                         score[i] += 4;
+                        //count +1 when correct
+                        count++;
+                        correctCountQuestion[j] += count;
+                        count = 0;
                     }
                     else if (word[j] == 'X' || word[j] == 'x')
                     {
@@ -177,13 +193,42 @@ namespace PROJECT_Multiple_Choice_Exam
                     }
                     else
                     {
+                        //Minus one point if answer was incorrect
                         score[i] -= 1;
                     }
                 }
+                count = 0; // reset counter once couted all 20 score for 1 question
             }
-
+            ExamData.SetCorrectCount(correctCountQuestion); // save correct answers count
             return score;
         }
-        
+        static public void ShowCorrectAnswerForQuestion()
+        {
+            Console.WriteLine("number of correct responses for each question:");
+
+            int[] corrAnsTimes = ExamData.GetCorrectCount();
+
+            FormatLines(0, 10, "question", " ", corrAnsTimes);
+            FormatLines(0, 10, "#correct", " ", corrAnsTimes);
+            
+            Console.WriteLine();
+
+            FormatLines(10, 20, "question", " ", corrAnsTimes);
+            FormatLines(10, 20, "#correct", "  ", corrAnsTimes);
+    
+        }
+
+        static public void FormatLines(int min, int max, string text, string space, int[] corrAns)
+        {
+            Console.Write(text + ": ");
+            for (int y = min; y < max; y++)
+            {
+                if (text.Equals("question"))
+                    Console.Write((y + 1) + space);
+                if (text.Equals("#correct"))
+                    Console.Write(corrAns[y] + space);
+            }
+            Console.WriteLine();
+        }
     }
 }
